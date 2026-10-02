@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>dsh-cover · 版式 A（完整信息图）</title>
+<!--
+  dsh-cover 模板 · 3:4 信息图封面
+  ─────────────────────────────────────────────
+  三层结构：
+    ① 文字层  .masthead / .headline / .deck / .panel-head / .panel-body / .alert-text / .footer
+    ② 图标层  .hero-art（SVG 主视觉）+ .panel-body .icon（内联 SVG 图标）
+    ③ 内容框  .panel（三栏）+ .alert（警示条）
+
+  替换清单：
+    [项目名]        → 刊头项目名称
+    [logo 路径]     → assets/ 下从项目仓库下载的 logo
+    标题四行        → data-lines 属性，用 | 分隔
+    三栏内容        → .panel 内的 .label / .big / .txt
+    底部结论        → .alert-text
+-->
+<style>
+/* ============ 字体层 ============ */
+@font-face{
+  font-family:'NotoSansSC';
+  src:url('file:///C:/Windows/Fonts/NotoSansSC-VF.ttf') format('truetype');
+  font-weight:100 900; font-style:normal; font-display:block;
+}
+/* macOS 用户改成：/System/Library/Fonts/PingFang.ttc
+   Linux 用户改成：/usr/share/fonts/opentype/noto/NotoSansCJK-Black.otf */
+@font-face{
+  font-family:'YaHeiBd';
+  src:url('file:///C:/Windows/Fonts/msyhbd.ttc') format('truetype');
+  font-weight:700;
+}
+
+:root{
+  /* ---- 三色系统（来自封面参考实测，勿随意改） ---- */
+  --red:#C41E1B;      /* 关键数字 / 关键动词 / 警示条 / 01·03 面板头 */
+  --navy:#0B2A5B;     /* 刊头 / 通栏分隔线 / 02 面板头 */
+  --blue:#12368F;     /* 标题里被强调的「词」 */
+  --ink:#111111;      /* 标题主色 / 正文 */
+  --grey:#999999;     /* 页脚 */
+  --pink:#FDEDED;     /* 01 面板底 */
+  --sky:#EAF1FA;      /* 03 面板底 */
+  --paper:#FFFFFF;
+
+  --W:1086px;         /* 3:4 竖版逻辑宽 */
+  --H:1448px;         /* 3:4 竖版逻辑高 */
+  --pad:20px;         /* 安全边距 */
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{background:#555;}
+body{display:flex;justify-content:center;align-items:flex-start;}
+
+/* ============ 画布 ============ */
+.cover{
+  position:relative;
+  width:var(--W); height:var(--H);
+  background:var(--paper);
+  overflow:hidden;
+  font-family:'NotoSansSC','YaHeiBd','Microsoft YaHei',sans-serif;
+  color:var(--ink);
+  display:flex; flex-direction:column;
+  padding:var(--pad);
+}
+
+/* ============ ① 文字层 · 刊头栏（加大 · 只放 logo + 项目名称） ============ */
+.masthead{
+  height:96px; flex:0 0 96px;
+  display:flex; align-items:center; gap:22px;
+}
+.masthead .logo{
+  width:82px; height:82px; flex:0 0 82px;
+  border-radius:14px; object-fit:cover;
+  background:var(--navy);
+  box-shadow:0 3px 0 rgba(11,42,91,.18);
+}
+.masthead .name{
+  font-size:60px; font-weight:900; letter-spacing:-.01em;
+  line-height:1; color:var(--ink); white-space:nowrap;
+}
+.masthead .name em{font-style:normal;color:var(--navy);}
+
+/* 藏蓝粗分隔线 */
+.rule-navy{flex:0 0 8px;height:8px;background:var(--navy);margin:12px 0 0 0;}
+
+/* ============ ① 文字层 · 主标题区 ============ */
+.headline-zone{
+  flex:1 1 auto;
+  display:flex; gap:18px;
+  align-items:center;        /* 垂直居中，避免标题下方出现大片留白 */
+  padding-top:26px;
+  min-height:0;
+}
+.headline{flex:1 1 auto; display:flex; flex-direction:column; justify-content:center;}
+
+/* 关键：每行 flex 两端对齐 → 字数少的行自动加宽，各行总宽一致 */
+.hl{
+  display:flex; justify-content:space-between; align-items:baseline;
+  width:100%; line-height:1.0;
+  font-size:88px; font-weight:900; letter-spacing:-.02em;
+  margin-bottom:18px;
+}
+.hl:last-child{margin-bottom:0;}
+.hl span{display:inline-block;}
+.hl .red{color:var(--red);}
+.hl .blue{color:var(--blue);}
+
+/* ============ ② 图标层 · 右上角主视觉（SVG 绘制） ============ */
+.hero-art{
+  flex:0 0 372px; width:372px; height:330px;
+  border-radius:8px; overflow:hidden; background:var(--navy);
+}
+.hero-art svg{display:block;width:100%;height:100%;}
+
+/* ============ ① 文字层 · 导语 ============ */
+.deck{flex:0 0 auto; font-size:32px; font-weight:500; line-height:1.3; padding:16px 0 14px 0;}
+.deck em{font-style:normal;font-weight:900;color:var(--red);}
+.rule-red{flex:0 0 4px;height:4px;background:var(--red);}
+
+/* ============ ③ 内容框 · 三栏面板 ============ */
+.panels{
+  flex:0 0 372px;
+  display:grid; grid-template-columns:1fr 1fr 1fr; gap:0;
+  margin-top:20px;
+}
+.panel{display:flex; flex-direction:column; border:1px solid rgba(11,42,91,.16);}
+.panel.p1{background:var(--pink);}
+.panel.p2{background:#FFFFFF;}
+.panel.p3{background:var(--sky);}
+.panel + .panel{border-left:none;}
+
+.panel-head{height:58px;display:flex;align-items:center;gap:12px;padding:0 16px;color:#fff;}
+.p1 .panel-head{background:var(--red);}
+.p2 .panel-head{background:var(--navy);}
+.p3 .panel-head{background:var(--red);}
+.panel-head .no{font-size:30px;font-weight:900;letter-spacing:.02em;}
+.panel-head .div{width:1px;height:26px;background:rgba(255,255,255,.75);}
+.panel-head .label{font-size:30px;font-weight:900;}
+
+.panel-body{
+  flex:1 1 auto; display:flex; flex-direction:column;
+  align-items:flex-start; justify-content:flex-start;
+  padding:22px 18px 18px 18px; gap:10px;
+}
+.panel-body .icon{width:68px;height:68px;margin-bottom:6px;}
+.panel-body .icon svg{width:100%;height:100%;display:block;fill:var(--red);}
+.panel.p2 .panel-body .icon svg{fill:var(--navy);}
+.panel-body .big{font-size:82px;font-weight:900;color:var(--red);line-height:.95;letter-spacing:-.03em;}
+.panel.p2 .panel-body .big{color:var(--navy);}
+.panel-body .txt{font-size:24px;line-height:1.42;color:var(--ink);font-weight:500;}
+
+/* ============ ③ 内容框 · 底部警示条：红方块 + 白圈 + 加粗惊叹号 ============ */
+.alert{
+  flex:0 0 158px; margin-top:20px;
+  border:4px solid var(--red); background:#fff;
+  display:flex; align-items:stretch;
+}
+.alert-badge{flex:0 0 158px;width:158px;background:var(--red);display:flex;align-items:center;justify-content:center;}
+.alert-circle{width:106px;height:106px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;}
+.alert-circle .bang{font-size:82px;font-weight:900;color:var(--red);line-height:1;transform:translateY(-4px);}
+.alert-text{flex:1 1 auto;display:flex;flex-direction:column;justify-content:center;padding:0 26px;gap:2px;}
+.alert-text .l1{font-size:44px;font-weight:900;line-height:1.14;}
+.alert-text .l1 em{font-style:normal;color:var(--red);}
+
+/* ============ ① 文字层 · 页脚 ============ */
+.footer{
+  flex:0 0 46px; display:flex; align-items:flex-end;
+  border-top:1px solid #E3E3E3; margin-top:auto; padding-top:10px;
+  font-size:21px; color:var(--grey); font-weight:500;
+}
+</style>
+</head>
+<body>
+<div class="cover" id="cover">
+
+  <!-- ===== ① 刊头栏：只放 logo + 项目名称 ===== -->
+  <header class="masthead">
+    <img class="logo" src="assets/logo.png" alt="">
+    <div class="name">[项目名] <em>[强调词]</em></div>
+  </header>
+  <div class="rule-navy"></div>
+
+  <!-- ===== ①② 主标题区 + 图标层主视觉 ===== -->
+  <section class="headline-zone">
+    <h1 class="headline" id="headline"
+        data-lines="[标题第1行]|[标题第2行]|[标题第3行]|[标题第4行]"></h1>
+
+    <div class="hero-art">
+      <svg viewBox="0 0 372 330" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#0E2F63"/><stop offset="100%" stop-color="#061733"/>
+          </linearGradient>
+          <linearGradient id="arrow" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#E23B33"/><stop offset="100%" stop-color="#B0180F"/>
+          </linearGradient>
+        </defs>
+        <rect width="372" height="330" fill="url(#bg)"/>
+        <g stroke="#2E5FA8" stroke-width="2" opacity=".55" fill="none">
+          <path d="M0 60 H120 V150 H250"/><path d="M0 150 H70 V250 H200"/>
+          <path d="M372 90 H280 V190 H150"/><path d="M372 240 H300 V300 H180"/>
+          <path d="M60 0 V70 H160"/><path d="M240 0 V50 H330"/>
+        </g>
+        <g fill="#2E5FA8" opacity=".7">
+          <circle cx="120" cy="60" r="4"/><circle cx="70" cy="150" r="4"/>
+          <circle cx="280" cy="90" r="4"/><circle cx="300" cy="240" r="4"/>
+        </g>
+        <g id="tiles"></g>
+        <g transform="translate(196,150)">
+          <path d="M40 0 L86 62 H58 V128 H22 V62 H-6 Z" fill="url(#arrow)" stroke="#7E0F09" stroke-width="2"/>
+        </g>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ===== ① 导语 ===== -->
+  <div class="deck">[导语，含一个 <em>红色数字</em>]</div>
+  <div class="rule-red"></div>
+
+  <!-- ===== ③ 三栏内容框 ===== -->
+  <section class="panels">
+    <div class="panel p1">
+      <div class="panel-head"><span class="no">01</span><span class="div"></span><span class="label">[小标题1]</span></div>
+      <div class="panel-body">
+        <div class="icon"><!-- 内联 SVG 图标（红） --></div>
+        <div class="big">[数字1]</div>
+        <div class="txt">[说明1]</div>
+      </div>
+    </div>
+    <div class="panel p2">
+      <div class="panel-head"><span class="no">02</span><span class="div"></span><span class="label">[小标题2]</span></div>
+      <div class="panel-body">
+        <div class="icon"><!-- 内联 SVG 图标（蓝） --></div>
+        <div class="big">[数字2]</div>
+        <div class="txt">[说明2]</div>
+      </div>
+    </div>
+    <div class="panel p3">
+      <div class="panel-head"><span class="no">03</span><span class="div"></span><span class="label">[小标题3]</span></div>
+      <div class="panel-body">
+        <div class="icon"><!-- 内联 SVG 图标（红） --></div>
+        <div class="big">[数字3]</div>
+        <div class="txt">[说明3]</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ③ 底部警示条：红方块 + 白圈 + 加粗惊叹号 ===== -->
+  <section class="alert">
+    <div class="alert-badge">
+      <div class="alert-circle"><span class="bang">!</span></div>
+    </div>
+    <div class="alert-text">
+      <div class="l1">[结论，含 <em>红色关键词</em>]</div>
+    </div>
+  </section>
+
+  <footer class="footer">[数据来源 / 免责声明]</footer>
+</div>
+
+<script>
+/* ============================================================
+   ① 文字层：把每行标题拆成单字 span，
+      配合 .hl 的 flex space-between 实现「字数少的行自动加宽」。
+   ② 图标层：程序化生成主视觉里的插件模块阵列。
+   ============================================================ */
+(function () {
+  const h = document.getElementById('headline');
+  // 标红 / 标蓝的 token（按需修改）
+  const RED  = new Set(['4412']);
+  const BLUE = new Set(['23']);
+
+  h.dataset.lines.split('|').forEach(function (line) {
+    const row = document.createElement('div');
+    row.className = 'hl';
+    // 数字 / 英文连成一个 token，中文逐字，空格单独成 token
+    const tokens = line.match(/[0-9A-Za-z.]+|\s+|./gu) || [];
+    tokens.forEach(function (t) {
+      const s = document.createElement('span');
+      s.textContent = t;
+      if (t.trim() === '') s.style.flex = '0 0 auto';
+      if (RED.has(t))  s.classList.add('red');
+      if (BLUE.has(t)) s.classList.add('blue');
+      row.appendChild(s);
+    });
+    h.appendChild(row);
+  });
+
+  /* 图标层：插件模块阵列 */
+  const tiles = document.getElementById('tiles');
+  if (tiles) {
+    const NS = 'http://www.w3.org/2000/svg';
+    const COLS = 6, ROWS = 5, S = 34, GAP = 14, X0 = 26, Y0 = 26;
+    for (let r = 0; r < ROWS; r++) {
+      for (let c = 0; c < COLS; c++) {
+        const x = X0 + c * (S + GAP), y = Y0 + r * (S + GAP);
+        const g = document.createElementNS(NS, 'g');
+        const rect = document.createElementNS(NS, 'rect');
+        rect.setAttribute('x', x); rect.setAttribute('y', y);
+        rect.setAttribute('width', S); rect.setAttribute('height', S);
+        rect.setAttribute('rx', 6);
+        rect.setAttribute('fill', '#16386F');
+        rect.setAttribute('stroke', '#3E6FBF');
+        rect.setAttribute('stroke-width', '2');
+        g.appendChild(rect);
+        const core = document.createElementNS(NS, 'rect');
+        core.setAttribute('x', x + 9); core.setAttribute('y', y + 9);
+        core.setAttribute('width', S - 18); core.setAttribute('height', S - 18);
+        core.setAttribute('rx', 3);
+        core.setAttribute('fill', '#8FC3FF');
+        core.setAttribute('opacity', '0.9');
+        g.appendChild(core);
+        tiles.appendChild(g);
+      }
+    }
+  }
+})();
+</script>
+</body>
+</html>

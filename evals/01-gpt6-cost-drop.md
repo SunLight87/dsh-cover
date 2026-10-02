@@ -2,6 +2,9 @@
 
 一条完整走通的样例，用来校准输出格式与质量。**新会话先读这一篇。**
 
+> 版本说明：v2.0 起改为**代码生成**方案。本 eval 描述的是「写 HTML → 渲染 → 截图」的流程，
+> 不再涉及任何 AI 生图提示词。
+
 ---
 
 ## 输入
@@ -11,99 +14,145 @@
 
 ---
 
-## 【意象提取】
+## 第 0 步 · 意象提取
 
 | 槽位 | 取值 |
 |------|------|
-| `{{SUBJECT}}` | 一块刻着 `AI` 的芯片，边缘正在被"削价"削掉一角 |
+| `{{SUBJECT}}` | 一块被削掉一角的芯片（价格被削） |
 | `{{NUMBER}}` | `-80%`（最大红色数字） |
 | `{{POLARITY}}` | 中性偏利好 → 红蓝对撞 |
 | `{{INDUSTRY}}` | 芯片、API 接口、服务器、价格标签 |
-| `{{METAPHOR}}` | 价格断崖式下坠（红色下折线） |
+| `{{METAPHOR}}` | 价格断崖式下坠（红色折线） |
 | `{{SECTIONS}}` | 核心数据 / 价格变化 / 直接影响 |
 | `{{TAKEAWAY}}` | 拼参数的时代结束了，拼成本的时代刚开始。 |
 
 ---
 
-## 【底图提示词 · 英文】（MJ / Flux）
+## 第 1 步 · HTML 关键片段
 
-```
-Chinese financial-news infographic cover TEMPLATE PLATE, 3:4 vertical, pure white paper background,
-newspaper front-page grid, ABSOLUTELY NO TEXT of any kind - no letters, no numbers, no Chinese
-characters, no placeholder glyphs, no lorem ipsum, every text area left as clean empty white space,
-ultra-bold heavy black sans-serif Chinese typography reserved as blank areas (Source Han Sans Heavy
-weight, uniform strokes, flat terminals, tight tracking, line-height 0.95) for later typesetting,
-geometric extra-bold grotesque numerals reserved as blank areas (Archivo Black style),
-strict 3-color system: China red #C41E1B, deep navy #0B2A5B, royal blue #12368F, plus ink black #111111,
-flat two-tone vector icons (red and navy only, no gradients, no shadows), hairline dividers,
-light pink panel #FDEDED and light blue panel #EAF1FA, full-width navy rule,
-red-outlined warning bar with exclamation-mark circle,
-layout: masthead strip 0-6% with a navy solid square at left and blank space at right,
-full-width deep navy rule at 7%, blank date-line band at 8-9.5%,
-headline zone 10-50% kept entirely blank white for 3-5 stacked left-aligned headline lines,
-upper-right 35% x 22% of that zone holding a 3D render cutout of a single semiconductor chip
-engraved with the letters "AI", one corner chipped away, with a bold red downward arrow and a jagged
-price-drop polyline overlaying it, blank deck band at 52-54%, thin red rule at 55%,
-three equal columns 56-84% each with a solid header bar alternating red / navy / red and left blank
-inside, below it a flat two-tone red-and-navy vector icon of a chip, an API bracket symbol, a server
-rack and a price tag, a blank block for an oversized red statistic, and blank space for 2-3 short body
-lines, a simple red bar chart and a navy donut chart inside two of the panels,
-red-outlined alert bar 85-96% with a white exclamation mark in a red circle at left and blank space
-at right, hairline rule at 96-99%,
-Swiss grid, 20px safe margins, near full-bleed content width 96%, generous negative space above,
-vector-crisp print-ready edges, no gradient text, no outlined text, no 3D bevel text, no drop shadows
---ar 3:4 --style raw --stylize 100
+### ① 文字层 · 刊头（只放 logo + 项目名）
+
+```html
+<header class="masthead">
+  <img class="logo" src="assets/logo-openai.png" alt="">
+  <div class="name">OpenAI <em>GPT-6</em></div>
+</header>
+<div class="rule-navy"></div>
 ```
 
-## 【底图提示词 · 中文】（即梦 / Seedream）
+### ① 文字层 · 标题行（宽度归一）
 
-取 `assets/prompt-baseplate.md` 中文版，替换：
-
-- `【项目logo+项目名称】` → `项目 logo + 栏目名`
-- `【核心主体】` → `一块刻着 "AI" 的芯片，边缘被削掉一角`
-- `【行业符号】` → `芯片、API 接口、服务器、价格标签`
-- `【关键数字】` → 留空（数字由压字阶段填）
-
-## 【负面提示】
-
-```
-text, watermark, signature, garbled Chinese characters, misspelled letters, blurry,
-low-res, jagged edges, jpeg artifacts, noise, gradient text, outlined text, 3D beveled text,
-drop shadow text, glowing text, neon, cyberpunk, purple-teal color cast, pastel palette,
-hand-drawn, sketch, watercolor, anime, cartoon mascot, illustration style, lens flare,
-bokeh, depth of field, serif fonts, calligraphy, decorative script, gold foil, marble texture,
-cluttered background, cluttered collage, rainbow palette, messy layout, uneven spacing,
-element bleeding off canvas, centered typography, dark moody lighting, low contrast,
-over-decorated, stock-photo watermark
+```html
+<h1 class="headline" id="headline"
+    data-lines="OpenAI发布GPT-6|推理成本|再降 80%|拼成本时代开始"></h1>
 ```
 
-MJ 追加：`--no text,letters,numbers,glyphs,placeholder,watermark`
+```js
+const RED  = new Set(['80%']);
+const BLUE = new Set(['拼成本时代开始']);
+// 其余同模板：拆成单字 span + flex space-between
+```
+
+> 字号核算：可用宽度 `1046 − 372 − 18 = 656px`，最长行 `OpenAI发布GPT-6`
+> 约合 6 个中文当量 → `656 ÷ 6 ≈ 109px`。取 **88px** 留余量。
+
+### ② 图标层
+
+| 元素 | 来源 | 说明 |
+|------|------|------|
+| 项目 logo | `https://github.com/openai.png` | 项目仓库头像，真实素材 |
+| 芯片图标 | Octicons `cpu-16.svg` | 成熟图标库仓库 |
+| 价格标签 | Octicons `tag-16.svg` | 同上 |
+| 服务器 | Octicons `server-16.svg` | 同上 |
+| 主视觉 | SVG 手绘 | 深蓝主板 + 芯片阵列 + 红色下坠折线 |
+
+全部**内联**进 HTML，`fill` 由 CSS 控制为 `var(--red)` / `var(--navy)`。
+
+### ③ 内容框
+
+```html
+<section class="panels">
+  <div class="panel p1">
+    <div class="panel-head"><span class="no">01</span><span class="div"></span><span class="label">核心数据</span></div>
+    <div class="panel-body">
+      <div class="icon"><svg viewBox="0 0 16 16">…cpu…</svg></div>
+      <div class="big">-80%</div>
+      <div class="txt">推理成本大幅下探<br>降价幅度创纪录</div>
+    </div>
+  </div>
+  <div class="panel p2">
+    <div class="panel-head"><span class="no">02</span><span class="div"></span><span class="label">价格变化</span></div>
+    <div class="panel-body">
+      <div class="icon"><svg viewBox="0 0 16 16">…tag…</svg></div>
+      <div class="big">0.4</div>
+      <div class="txt">每百万 token 美元<br>中小开发者可负担</div>
+    </div>
+  </div>
+  <div class="panel p3">
+    <div class="panel-head"><span class="no">03</span><span class="div"></span><span class="label">直接影响</span></div>
+    <div class="panel-body">
+      <div class="icon"><svg viewBox="0 0 16 16">…server…</svg></div>
+      <div class="big">窗口期</div>
+      <div class="txt">竞争从拼参数<br>转向拼成本</div>
+    </div>
+  </div>
+</section>
+```
+
+### ③ 内容框 · 底部警示条（红方块 + 白圈 + 加粗惊叹号）
+
+```html
+<section class="alert">
+  <div class="alert-badge">
+    <div class="alert-circle"><span class="bang">!</span></div>
+  </div>
+  <div class="alert-text">
+    <div class="l1">拼参数的时代结束了，<em>拼成本</em>的时代刚开始。</div>
+  </div>
+</section>
+```
 
 ---
 
-## 【压字坐标表】（1086 × 1448）
+## 第 2 步 · 渲染
 
-| 区域 | y | 字号 | 字重 / 颜色 | 内容 |
-|------|---|------|-------------|------|
-| 刊头栏目名 | 20–78 | 48 px | Heavy / `#111111` | 栏目名 |
-| 期号 | 10–70 | 66 px | Archivo Black / `#0B2A5B` | `01 / 02` |
-| 日期行 | 112–138 | 23 px | Regular / `#111111` | 新闻日期 |
-| 主标题 L1 | 145–280 | 128 px | Heavy / `#111111` | OpenAI 发布 GPT-6 |
-| 主标题 L2 | 285–420 | 128 px | Heavy / `#111111` + 数字 `#C41E1B` | 推理成本**再降 80%** |
-| 主标题 L3 | 425–560 | 128 px | Heavy / `#12368F` | 拼参数时代结束 |
-| 主标题 L4 | 565–700 | 128 px | Heavy / `#111111` | 拼成本时代开始 |
-| 导语 | 748–783 | 31 px | Medium，数字红 | API 价格降至每百万 token **0.4** 美元，中小开发者迎来窗口期。 |
-| 三栏小标题 | 色条内 | 36 px | Bold / 白 | `01 核心数据` ｜ `02 价格变化` ｜ `03 直接影响` |
-| 面板数字 | 面板中部 | 96 px | Archivo Black / `#C41E1B` | `-80%` ｜ `0.4 USD` ｜ `窗口期` |
-| 面板正文 | 数字下方 | 27 px | Regular / `#111111`，行距 1.4 | 各 2 行 |
-| 底部结论 | 警示条内 | 42 px | Heavy，关键词红 | 拼参数的时代结束了，拼成本的时代刚开始。 |
-| 页脚 | 1393–1426 | 21 px | Regular / `#999999` | 免责声明 |
-
-**自检 5 条**：① 缩到 20% 标题仍可读 ✓ ② 无文字压到配图块 ✓ ③ 红色只出现在 `-80%`、`0.4`、警示条、01/03 面板头 ✓ ④ 字重层级 = 3 ✓ ⑤ 四边留白 ≥ 20px ✓
+```bash
+python scripts/render.py cover.html out/cover.png 1086 1448 2
+# OK -> out/cover.png  (2172 x 2896)
+```
 
 ---
 
-## 交付物预期
+## 第 3 步 · 渲染后自检（对照 `references/anti-patterns.md`）
 
-1. **AI 产出**：1086 × 1448 白底**无文字**底图 —— 右上留白、右下芯片 + 红色下坠箭头、下半部三栏面板 + 底部红框结论条，所有文字位为纯白空带。
-2. **压字后**：思源黑体 Heavy + Archivo Black 把四行标题（黑 / 红 / 蓝 / 黑）、导语、三栏、结论依次排入，导出 PNG 2x。
+| # | 检查项 | 结果 |
+|---|--------|------|
+| 1 | 图标是红/蓝，不是黑色 | ✅ 内联 SVG + `fill:var(--red)` |
+| 2 | 标题无溢出 | ✅ 最长行 6 当量 @88px = 528px < 656px |
+| 3 | 无大片留白 | ✅ `.headline-zone{align-items:center}` |
+| 4 | 中文字体生效 | ✅ Noto Sans SC 900，笔画清晰 |
+| 5 | 导语单行 | ✅ 24 字 @32px ≈ 768px < 1046px |
+| 6 | 红色未滥用 | ✅ 仅 `-80%` / `0.4` / 警示条 / 01·03 面板头 |
+| 7 | 三栏等高 | ✅ grid 保证 |
+| 8 | 面板正文 ≤ 3 行 | ✅ 各 2 行 |
+| 9 | 警示条不挤压 | ✅ `padding:0 26px` |
+| 10 | 页脚完整 | ✅ 各段 flex 之和 1408 < 1448 |
+| 11 | 字重层级 = 3 | ✅ 900 / 500 |
+| 12 | 标题未居中 | ✅ 两端对齐 |
+
+**最后一步**：缩到 20% 看，标题仍一眼可读 ✅
+
+---
+
+## 交付物
+
+1. `cover.html` —— 可继续编辑的源文件
+2. `out/cover.png` —— 2172 × 2896 成品封面
+3. 一句话设计取舍：把「价格下坠」做成主视觉里的红色折线，数字 `-80%` 占最大红色权重。
+
+---
+
+## 参考：一张真实成品
+
+见 `examples/cover-awesome-dsh-plugin.html` 与 `.png` ——
+用同一套模板为「DSH 插件生态 4412 个插件」生成的封面，中文零乱码。

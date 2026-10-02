@@ -11,11 +11,17 @@ out/
 # generated cover output
 output/
 renders/
+out/
 *.png
 *.jpg
 *.jpeg
 *.webp
 *.pdf
+
+# 但 examples/ 里的成品封面与素材要入库（视觉基线）
+!examples/**/*.png
+!examples/**/*.jpg
+!examples/**/*.svg
 
 # OS / editor
 .DS_Store

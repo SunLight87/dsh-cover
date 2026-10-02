@@ -1,7 +1,7 @@
 {
   "name": "dsh-cover",
-  "version": "1.0.0",
-  "description": "Cover-prompt generator for Chinese finance / AI-news infographic covers — an Agent Skill that turns a headline or short article into a text-free 3:4 base-plate prompt plus a typesetting coordinate table. 中文财经/AI资讯信息图封面提示词生成器。",
+  "version": "2.0.0",
+  "description": "Cover generator for Chinese finance / AI-news infographics — code, not AI image generation. Writes HTML/CSS/JS, renders it in a real browser and screenshots a finished 3:4 PNG. 中文财经/AI资讯信息图封面生成器（代码生成版）。",
   "keywords": [
     "dsh",
     "dsh-plugin",
@@ -11,16 +11,14 @@
     "cover",
     "cover-image",
     "infographic",
-    "prompt",
-    "prompt-template",
-    "image-generation",
-    "midjourney",
-    "flux",
+    "html-to-image",
+    "screenshot",
+    "playwright",
     "typography",
-    "chinese"
+    "chinese",
+    "no-ai-image-generation"
   ],
   "license": "MIT",
-  "author": "",
   "type": "module",
   "files": [
     "SKILL.md",
@@ -30,18 +28,25 @@
     "PUBLISH.md",
     "AGENTS.md",
     "LICENSE",
+    "templates/",
+    "scripts/",
     "references/",
     "assets/",
+    "examples/",
     "evals/"
   ],
+  "scripts": {
+    "render": "python scripts/render.py examples/cover-awesome-dsh-plugin.html out/cover.png 1086 1448 2"
+  },
   "dsh": {
     "kind": "skill",
     "skill": "SKILL.md",
     "displayName": "dsh-cover",
-    "summary": "文案/标题 → 信息图封面提示词（无文字底图 + 压字坐标表）",
+    "summary": "文案/标题 → 代码生成信息图封面 PNG（HTML/CSS 渲染截图，不用 AI 生图）",
     "categories": [
       "Skills",
-      "Vision & Multimodal"
+      "Vision & Multimodal",
+      "Docs & Rendering"
     ],
     "triggers": [
       "做封面",
