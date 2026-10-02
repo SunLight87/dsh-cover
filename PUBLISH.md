@@ -1,5 +1,10 @@
 # 发布指南 · 把 dsh-cover 推到 GitHub 的 `dsh-plugin` 生态
 
+> **状态：已发布** ✅
+> 仓库：<https://github.com/SunLight87/dsh-cover>（public）
+> topic 已打：`dsh-plugin` `deepseek-harness` `dsh` `agent-skill` `skill` `cover-image` `infographic` `prompt-template` `midjourney` `typography`
+> 已验证可被 <https://github.com/topics/dsh-plugin> 检索到。以下步骤保留作为复现/迁移参考。
+>
 > 目标：让仓库出现在 [github.com/topics/dsh-plugin](https://github.com/topics/dsh-plugin)，
 > 并具备提交到 [awesome-dsh-plugin](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin) 的条件。
 
