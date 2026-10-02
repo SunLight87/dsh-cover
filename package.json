@@ -1,0 +1,60 @@
+{
+  "name": "dsh-cover",
+  "version": "1.0.0",
+  "description": "Cover-prompt generator for Chinese finance / AI-news infographic covers — an Agent Skill that turns a headline or short article into a text-free 3:4 base-plate prompt plus a typesetting coordinate table. 中文财经/AI资讯信息图封面提示词生成器。",
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "agent-skill",
+    "skill",
+    "cover",
+    "cover-image",
+    "infographic",
+    "prompt",
+    "prompt-template",
+    "image-generation",
+    "midjourney",
+    "flux",
+    "typography",
+    "chinese"
+  ],
+  "license": "MIT",
+  "author": "",
+  "type": "module",
+  "files": [
+    "SKILL.md",
+    "README.md",
+    "README.zh-CN.md",
+    "INSTALL.md",
+    "PUBLISH.md",
+    "AGENTS.md",
+    "LICENSE",
+    "references/",
+    "assets/",
+    "evals/"
+  ],
+  "dsh": {
+    "kind": "skill",
+    "skill": "SKILL.md",
+    "displayName": "dsh-cover",
+    "summary": "文案/标题 → 信息图封面提示词（无文字底图 + 压字坐标表）",
+    "categories": [
+      "Skills",
+      "Vision & Multimodal"
+    ],
+    "triggers": [
+      "做封面",
+      "生成封面",
+      "封面图",
+      "信息图封面",
+      "封面提示词",
+      "公众号封面",
+      "小红书封面",
+      "财经封面",
+      "资讯封面",
+      "cover prompt",
+      "dsh-cover"
+    ]
+  }
+}

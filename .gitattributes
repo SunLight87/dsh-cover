@@ -1,0 +1,16 @@
+# Normalize line endings: LF in the repo, native on checkout.
+* text=auto eol=lf
+
+# Explicit for text formats we ship
+*.md   text eol=lf
+*.json text eol=lf
+*.yml  text eol=lf
+*.yaml text eol=lf
+
+# Never touch binaries
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.webp binary
+*.pdf  binary
+*.woff2 binary
